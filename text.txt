@@ -1,0 +1,102 @@
+sudo apt-get update && upgrade
+
+//install amp (apache+mysql+php)
+sudo apt-get install apache2
+sudo apt-get install mysql-client mysql-server
+sudo apt-get install php5
+
+ipconfig
+//check ip adress -> 주소창에 입력해서 서버 작동 확인
+//유선 랜 정보: eth0
+//무선 랜 정보: wlan0
+
+lscpu
+//check Architecture
+//
+
+wget [주소]
+tar -xvf [파일명(확장자 포함)] 
+
+//opt폴더를 만들어 path 설정 (optional)
+sudo mv [파일명(확장자 제외)] /opt/nodejs
+sudo In -s /opt/nodejs/bin/node /usr/bin/node
+sudo In -s /opt/nodejs/bin/npm /usr/bin/npm
+sudo In -s /opt/nodejs/bin/npx /usr/bin/npx
+
+//test
+node --version
+
+
+raspberry
+
+raspberry code
+#include <stdio.h>
+#include <wiringPi.h>
+
+
+
+sudo mkdir html
+>>main.html
+
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>main</title>
+	</head>
+	<body>
+		<h1>CONTROL</h1>
+		<form action = "/php/control.php" method = "get">
+			<input type = "radio" name = "opt_sig" value = "on"> ON <br>
+			<input type = "radio" name = "opt_sig" value = "off"> OFF <br>
+		</form>
+	</body>
+</html>
+
+sudo mkdir php
+>>control.php
+<?php
+$get_sig ;
+$myFile = "/home/pi/controlData.txt" ;
+$domain = "tcp://"."ip address"; //input your domain
+	if ($_GET["ardu"] == "data") {
+		$fh = fopen($myFile. 'r') ;
+		$line = fgets($fh) ;
+		fclose($fh) ;
+		echo $line ;
+	}
+
+	else if ($_GET["led"] != NULL) {
+		$get_sig = $_GET["opt_sig"] ;
+		if ($get_sig == "on") {
+			$fh = fopen($myFile, 'w') ;
+			 fwrite($fh, '1') ;
+			fclose($fh) ;
+			$fp = fsockopen($domain, 80, $errno, $errstr, 30) ;
+		 	if (!$fp) {
+				echo "$errstr ($errno)<br/>\n" ;
+			}
+			else {
+				fwrite($fp, "on") ;
+				fclose($fp) ;
+			}
+			echo "<script>location.replace('../html/led.html') ;</script>" ;
+		}
+		else if ($get_sig == "off") {
+			$fh = fopen($myFile, 'w') ;
+		fwrite($fh, '0') ;
+			fclose($fh) ;
+			$fp = fsockopen($domain, 80, $errno, $errstr, 30) ;
+			if (!$fp) {
+				echo "$errstr ($errno)<br/>\n" ;
+			}
+			else {
+				fwrite($fp, "off") ;
+				fclose($fp) ;
+			}
+			echo "<script>location.replace('../html/led.html') ;</script>" ;
+		}
+  	}
+  	else {
+    		echo "fail to get led data" ;
+	}
+?>

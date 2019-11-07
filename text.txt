@@ -5,7 +5,7 @@ sudo apt-get install apache2
 sudo apt-get install mariadb-client mariadb-server
 sudo apt-get install php7.1
 
-ipconfig
+ifconfig
 //check ip adress -> 주소창에 입력해서 서버 작동 확인
 //유선 랜 정보: eth0
 //무선 랜 정보: wlan0
